@@ -1,3 +1,6 @@
+# Dedicated project files
+tmp-frontify
+
 !*.keep
 
 # Created by https://www.gitignore.io/api/osx,linux,windows,sublimetext,sass,less,sublimetext,jetbrains,maven,node,bower,grunt

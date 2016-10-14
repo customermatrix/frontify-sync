@@ -11,7 +11,14 @@ var Files = require('./files.service');
 var Logger = require('./logger.service');
 
 function init(patternsFolder) {
-  generatePatterns(patternsFolder);
+  try {
+    generatePatterns(patternsFolder);
+  }
+  catch(err) {
+    Logger.error(err);
+    return;
+  }
+  synchronizePatterns();
 }
 
 
@@ -22,9 +29,7 @@ function generatePatterns(patternsFolder) {
   walk(patternsFolder);
   var patternsList = Patterns.getList();
   if (!patternsList.length) {
-    var error = "Error: no patterns found";
-    Logger.error(error);
-    return;
+    throw "Error: no patterns found";
   }
 
   // Create temp folder
@@ -38,7 +43,7 @@ function generatePatterns(patternsFolder) {
     fs.writeFileSync(tmpFolder + '/' + pattern.name + '.json', patternAsString, 'utf8');
   });
 
-  Logger.success('Created/updated ' + patternsList.length + ' patterns');
+  Logger.info('Created/updated ' + patternsList.length + ' patterns');
 }
 
 /**
@@ -76,6 +81,23 @@ function walk(dir, currentPattern, startPattern) {
       }
     }
   });
+}
+
+/**
+ * Synchronize remote Frontify project
+ */
+function synchronizePatterns() {
+  var access = {
+    access_token: "frontify_access_token",
+    project: "frontify_project_id"
+  };
+  frontifyApi.syncPatterns(access, ['tmp-frontify/**/*.json'])
+    .then(function(data) {
+      Logger.success('Success: Patterns have been synchronized to Frontify');
+    })
+    .catch(function(err) {
+        Logger.error(err);
+    });
 }
 
 module.exports = {
