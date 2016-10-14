@@ -16,7 +16,7 @@ function readDir(path) {
     return fs.readdirSync(path);
   }
   catch(err) {
-    var error = "Error:" + err.message;
+    var error = err.message;
     Logger.error(error);
     return null;
   }
@@ -37,7 +37,7 @@ function checkIfDir(path, silent) {
     if (silent) {
       return false;
     }
-    var error = "Error: " + err.message;
+    var error = err.message;
     Logger.error(error);
     return false;
   }

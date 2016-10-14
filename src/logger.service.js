@@ -41,9 +41,11 @@ function log(type, message) {
       color = "green";
       break;
     default:
+      type = '';
       color = "white";
   }
-  console.log(colors[color](message));
+  type += ':';
+  console.log(colors[color](type.toUpperCase()), message);
 }
 
 module.exports = {

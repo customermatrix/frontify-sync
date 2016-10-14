@@ -3,27 +3,42 @@
 var fs = require('fs');
 var _ = require('lodash');
 
-var frontifyApi = require('@frontify/frontify-api');
-var frontifyPattern = require('@frontify/frontify-api/lib/core/patterns.js');
-
 var Patterns = require('./patterns.service');
 var Files = require('./files.service');
+var Frontify = require('./frontify.service');
 var Logger = require('./logger.service');
 
-function init(patternsFolder) {
+
+var access = {
+  access_token: "frontify_access_token",
+  project: "frontify_project_id"
+};
+var patternsDir = './patterns';
+var patternsJSONFiles = [
+  'tmp-frontify/**/*.json'
+];
+var assetsFiles = [
+  'assets/**/*.*'
+];
+
+/**
+ * Generate patterns JSON files, then sync them and sync assets
+ */
+function init() {
   try {
-    generatePatterns(patternsFolder);
+    generatePatterns(patternsDir);
   }
   catch(err) {
     Logger.error(err);
     return;
   }
-  synchronizePatterns();
+  Frontify.syncPatterns(access, patternsJSONFiles);
+  Frontify.syncAssets(access, assetsFiles);
 }
-
 
 /**
  * Generate JSON files for found patterns
+ * @param  {String} patternsFolder    Root directory of patterns files
  */
 function generatePatterns(patternsFolder) {
   walk(patternsFolder);
@@ -81,23 +96,6 @@ function walk(dir, currentPattern, startPattern) {
       }
     }
   });
-}
-
-/**
- * Synchronize remote Frontify project
- */
-function synchronizePatterns() {
-  var access = {
-    access_token: "frontify_access_token",
-    project: "frontify_project_id"
-  };
-  frontifyApi.syncPatterns(access, ['tmp-frontify/**/*.json'])
-    .then(function(data) {
-      Logger.success('Success: Patterns have been synchronized to Frontify');
-    })
-    .catch(function(err) {
-        Logger.error(err);
-    });
 }
 
 module.exports = {
