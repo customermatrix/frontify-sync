@@ -1,0 +1,6 @@
+{
+  "accessToken": "frontify_access_token",
+  "patterns": "./patterns",
+  "bla": "bloom",
+  "dryRun": 123
+}

@@ -12,7 +12,7 @@ var Logger = require('./logger.service');
  * @param  {Array}  files     Array of JSON files to sync
  */
 function syncPatterns(access, files) {
-  frontifyApi.syncPatterns(access, files)
+  return frontifyApi.syncPatterns(access, files)
     .then(function(data) {
       Logger.success('Patterns have been synchronized to Frontify');
     })
@@ -36,7 +36,7 @@ function syncAssets(access, files, target, cwd) {
     assets.cwd = cwd;
   }
 
-  frontifyApi.syncAssets(access, files)
+  return frontifyApi.syncAssets(access, files)
     .then(function(data) {
       Logger.success('Assets have been synchronized to Frontify');
     })

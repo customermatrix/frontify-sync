@@ -32,7 +32,7 @@ function log(type, message) {
       color = "red";
       break;
     case "warning":
-      color = "orange";
+      color = "yellow";
       break;
     case "info":
       color = "cyan";

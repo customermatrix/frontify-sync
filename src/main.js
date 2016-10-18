@@ -2,38 +2,55 @@
 
 var fs = require('fs');
 var _ = require('lodash');
+var Promise = require("bluebird");
 
 var Patterns = require('./patterns.service');
 var Files = require('./files.service');
 var Frontify = require('./frontify.service');
 var Logger = require('./logger.service');
+var Conf = require('./configuration.service');
 
-
-var access = {
-  access_token: "frontify_access_token",
-  project: "frontify_project_id"
-};
-var patternsDir = './patterns';
 var patternsJSONFiles = [
-  'tmp-frontify/**/*.json'
-];
-var assetsFiles = [
-  'assets/**/*.*'
+  './tmp-frontify/**/*.json'
 ];
 
 /**
  * Generate patterns JSON files, then sync them and sync assets
+ * @param  {Object} args    Arguments object provided when requiring the library
+ * @return {[type]}      [description]
  */
-function init() {
+function init(args) {
+
+  var conf = {};
   try {
-    generatePatterns(patternsDir);
+    conf = Conf.parse(args);
+  }
+  catch(err) {
+    Logger.error(err);
+    return null;
+  }
+
+  var access = {
+    access_token: conf.accessToken,
+    project: conf.projectId,
+    cwd: conf.cwd,
+    target: conf.target
+  };
+
+  try {
+    generatePatterns(conf.patterns);
   }
   catch(err) {
     Logger.error(err);
     return;
   }
-  Frontify.syncPatterns(access, patternsJSONFiles);
-  Frontify.syncAssets(access, assetsFiles);
+  Promise.all([
+    Frontify.syncPatterns(access, patternsJSONFiles),
+    Frontify.syncAssets(access, conf.assets)
+  ])
+  .then(function() {
+    Logger.success('Job finished');
+  });
 }
 
 /**
@@ -98,6 +115,6 @@ function walk(dir, currentPattern, startPattern) {
   });
 }
 
-module.exports = {
-  init: init
-};
+module.exports = function() {
+  return init(arguments);
+}

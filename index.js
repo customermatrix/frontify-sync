@@ -1,4 +1,4 @@
 'use strict';
 
 var main = require('./src/main');
-main.init();
+main('./configuration.json', 'project_id', null, null, 'assets/**/*.*');
