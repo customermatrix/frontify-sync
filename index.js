@@ -1,4 +1,8 @@
-'use strict';
+#!/usr/bin/env node
+;
+var Main = require('./src/main');
+var CliParser = require('./src/cli-parser.service');
+var Logger = require('./src/logger.service');
 
-var main = require('./src/main');
-main('./configuration.json', 'project_id', null, null, 'assets/**/*.*');
+var options = CliParser.run();
+Main(options);

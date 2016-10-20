@@ -1,6 +1,9 @@
 {
   "accessToken": "frontify_access_token",
-  "patterns": "./patterns",
   "bla": "bloom",
-  "dryRun": 123
+  "dryRun": true,
+  "target": true,
+  "projectId": "frontify_project_id",
+  "patterns": "./patterns",
+  "assets": "./assets/**/*.*"
 }

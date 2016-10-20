@@ -68,7 +68,7 @@ function checkType(path) {
  * @return {Object}       Returns a pattern object
  */
 function getOrCreate(path) {
-  var UIPatternName = getName(path)
+  var UIPatternName = getName(path);
   if(isExistingPattern(UIPatternName)) {
     return patternsList[UIPatternName];
   }

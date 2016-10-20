@@ -12,13 +12,7 @@ var Logger = require('./logger.service');
  * @param  {Array}  files     Array of JSON files to sync
  */
 function syncPatterns(access, files) {
-  return frontifyApi.syncPatterns(access, files)
-    .then(function(data) {
-      Logger.success('Patterns have been synchronized to Frontify');
-    })
-    .catch(function(err) {
-        Logger.error(err);
-    });
+  return frontifyApi.syncPatterns(access, files);
 }
 
 /**
@@ -36,13 +30,7 @@ function syncAssets(access, files, target, cwd) {
     assets.cwd = cwd;
   }
 
-  return frontifyApi.syncAssets(access, files)
-    .then(function(data) {
-      Logger.success('Assets have been synchronized to Frontify');
-    })
-    .catch(function(err) {
-        Logger.error(err);
-    });
+  return frontifyApi.syncAssets(access, files);
 }
 
 module.exports = {

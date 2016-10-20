@@ -5,13 +5,26 @@ var _ = require('lodash');
 var Logger = require('./logger.service');
 
 /**
+ * Read synchronously a file path
+ * @param  {String} file  File path
+ * @return {String}       File contents
+ */
+function readFile(file) {
+  try {
+    return fs.readFileSync(file, 'utf8');
+  }
+  catch(err) {
+    Logger.error(err);
+    return;
+  }
+}
+
+/**
  * Read directory synchronously
  * @param  {String} path  Path to read
  * @return {Array}        Array of files
  */
 function readDir(path) {
-  var response;
-
   try {
     return fs.readdirSync(path);
   }
@@ -53,6 +66,7 @@ function getExtension(path) {
 }
 
 module.exports = {
+  readFile: readFile,
   readDir: readDir,
   checkIfDir: checkIfDir,
   getExtension: getExtension

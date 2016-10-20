@@ -7,8 +7,9 @@ var Promise = require("bluebird");
 var Patterns = require('./patterns.service');
 var Files = require('./files.service');
 var Frontify = require('./frontify.service');
+var Conf = require('./configuration-options.service');
+var ArgsParser = require('./arguments-parser.service');
 var Logger = require('./logger.service');
-var Conf = require('./configuration.service');
 
 var patternsJSONFiles = [
   './tmp-frontify/**/*.json'
@@ -19,15 +20,14 @@ var patternsJSONFiles = [
  * @param  {Object} args    Arguments object provided when requiring the library
  * @return {[type]}      [description]
  */
-function init(args) {
-
-  var conf = {};
+function run(args) {
+  var conf;
   try {
-    conf = Conf.parse(args);
+    conf = ArgsParser.run(args);
   }
   catch(err) {
     Logger.error(err);
-    return null;
+    return;
   }
 
   var access = {
@@ -37,20 +37,46 @@ function init(args) {
     target: conf.target
   };
 
-  try {
-    generatePatterns(conf.patterns);
+  var syncInfo = setSyncInfo(conf, access);
+  Promise.all(syncInfo.promises)
+    .then(function() {
+      Logger.success(syncInfo.message);
+    })
+    .catch(function(err) {
+      Logger.error(err.message);
+    });
+}
+
+function setSyncInfo(options, access) {
+  var promises = [];
+  var message = options.dryRun ? "(DRY RUN) " : "";
+
+  if (options.assets) {
+    message += "Assets";
+    promises.push(Frontify.syncPatterns(access, patternsJSONFiles));
   }
-  catch(err) {
-    Logger.error(err);
-    return;
+  if (options.assets && options.patterns) {
+    message += " and ";
   }
-  Promise.all([
-    Frontify.syncPatterns(access, patternsJSONFiles),
-    Frontify.syncAssets(access, conf.assets)
-  ])
-  .then(function() {
-    Logger.success('Job finished');
-  });
+  if (options.patterns) {
+    try {
+      generatePatterns(options.patterns);
+    }
+    catch(err) {
+      Logger.error(err);
+      return;
+    }
+    message += "Patterns";
+    promises.push(Frontify.syncPatterns(access, patternsJSONFiles));
+  }
+
+  message += " have been synchronized to Frontify";
+
+  return {
+    promises: promises,
+    message: message
+  };
+
 }
 
 /**
@@ -75,7 +101,7 @@ function generatePatterns(patternsFolder) {
     fs.writeFileSync(tmpFolder + '/' + pattern.name + '.json', patternAsString, 'utf8');
   });
 
-  Logger.info('Created/updated ' + patternsList.length + ' patterns');
+  Logger.info('Created/updated ' + patternsList.length + ' patterns locally');
 }
 
 /**
@@ -96,25 +122,26 @@ function walk(dir, currentPattern, startPattern) {
   var paths = Files.readDir(dir);
   _.forEach(paths, function(path) {
     path = dir + '/' + path;
-    if (Files.checkIfDir(path)) {
-      if(startPattern) {
-        currentPattern = Patterns.getOrCreate(path);
-        walk(path, currentPattern);
-        return;
-      }
 
-      if (Patterns.checkType(path)) {
-        walk(path, currentPattern, true);
-      }
-    } else {
+    if (!Files.checkIfDir(path) && Patterns.isAuthorizedAsset(fileExtension)) {
       var fileExtension = Files.getExtension(path);
-      if (Patterns.isAuthorizedAsset(fileExtension)) {
-        Patterns.registerAsset(path, currentPattern);
-      }
+      Patterns.registerAsset(path, currentPattern);
+      return;
     }
+
+    if(startPattern) {
+      currentPattern = Patterns.getOrCreate(path);
+      walk(path, currentPattern);
+      return;
+    }
+
+    if (Patterns.checkType(path)) {
+      walk(path, currentPattern, true);
+    }
+
   });
 }
 
-module.exports = function() {
-  return init(arguments);
+module.exports = function(args) {
+  return run(args);
 }
