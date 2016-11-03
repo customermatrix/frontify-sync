@@ -18,7 +18,6 @@ var patternsJSONFiles = [
 /**
  * Generate patterns JSON files, then sync them and sync assets
  * @param  {Object} args    Arguments object provided when requiring the library
- * @return {[type]}      [description]
  */
 function run(args) {
   var conf;
@@ -31,14 +30,14 @@ function run(args) {
   }
 
   var access = {
-    access_token: conf.accessToken,
-    project: conf.projectId,
-    cwd: conf.cwd,
-    target: conf.target
+    access_token: _.get(conf, 'accessToken', null),
+    project: _.get(conf, 'projectId', null),
+    cwd: _.get(conf, 'cwd', null),
+    target: _.get(conf, 'target', null)
   };
 
   var syncInfo = setSyncInfo(conf, access);
-  Promise.all(syncInfo.promises)
+  return Promise.all(syncInfo.promises)
     .then(function() {
       Logger.success(syncInfo.message);
     })
@@ -49,18 +48,18 @@ function run(args) {
 
 function setSyncInfo(options, access) {
   var promises = [];
-  var message = options.dryRun ? "(DRY RUN) " : "";
+  var message = _.get(options, 'dryRun') ? "(DRY RUN) " : "";
 
-  if (options.assets) {
+  if (_.get(options, 'assets')) {
     message += "Assets";
-    promises.push(Frontify.syncPatterns(access, patternsJSONFiles));
+    promises.push(Frontify.syncAssets(access, _.get(options, 'assets', null)));
   }
-  if (options.assets && options.patterns) {
+  if (_.get(options, 'assets') && _.get(options, 'patterns')) {
     message += " and ";
   }
-  if (options.patterns) {
+  if (_.get(options, 'patterns')) {
     try {
-      generatePatterns(options.patterns);
+      generatePatterns(_.get(options, 'patterns', null));
     }
     catch(err) {
       Logger.error(err);
@@ -87,7 +86,7 @@ function generatePatterns(patternsFolder) {
   walk(patternsFolder);
   var patternsList = Patterns.getList();
   if (!patternsList.length) {
-    throw "Error: no patterns found";
+    throw "no patterns found";
   }
 
   // Create temp folder
@@ -113,8 +112,6 @@ function generatePatterns(patternsFolder) {
 function walk(dir, currentPattern, startPattern) {
   // File is not a directory, we stop here
   if (!Files.checkIfDir(dir)) {
-    var error = "Error: file " + dir + " is not a directory";
-    Logger.error(error);
     return;
   }
 
@@ -123,8 +120,8 @@ function walk(dir, currentPattern, startPattern) {
   _.forEach(paths, function(path) {
     path = dir + '/' + path;
 
+    var fileExtension = Files.getExtension(path);
     if (!Files.checkIfDir(path) && Patterns.isAuthorizedAsset(fileExtension)) {
-      var fileExtension = Files.getExtension(path);
       Patterns.registerAsset(path, currentPattern);
       return;
     }

@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var Promise = require('bluebird');
 
 var frontifyApi = require('@frontify/frontify-api');
 var frontifyPattern = require('@frontify/frontify-api/lib/core/patterns.js');
@@ -23,11 +24,19 @@ function syncPatterns(access, files) {
  * @param  {String} cwd       Current local working directory
  */
 function syncAssets(access, files, target, cwd) {
+
+  if (!access || !_.isPlainObject(access)) {
+    return Promise.reject('Missing Frontify account information, job aborted!')
+      .catch(function(error) {
+        throw error;
+      });
+  }
+
   if (_.isString(target)) {
-    assets.target = target;
+    access.target = target;
   }
   if (_.isString(cwd)) {
-    assets.cwd = cwd;
+    access.cwd = cwd;
   }
 
   return frontifyApi.syncAssets(access, files);

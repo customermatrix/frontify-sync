@@ -69,8 +69,9 @@ function checkType(path) {
  */
 function getOrCreate(path) {
   var UIPatternName = getName(path);
-  if(isExistingPattern(UIPatternName)) {
-    return patternsList[UIPatternName];
+  var existingPattern = getExistingPattern(UIPatternName);
+  if(existingPattern) {
+    return existingPattern;
   }
 
   if (UIPatternName) {
@@ -87,8 +88,8 @@ function getOrCreate(path) {
  * @param  {String}  name  Name to check
  * @return {Boolean}
  */
-function isExistingPattern(name) {
-  return _.findIndex(patternsList, {name: name}) !== -1;
+function getExistingPattern(name) {
+  return _.find(patternsList, {name: name});
 }
 
 /**
@@ -109,7 +110,7 @@ function isAuthorizedAsset(ext) {
  * @return {Boolean}
  */
 function hasAsset(currentPattern, assetType, path) {
-  return _.indexOf(currentPattern.assets[assetType], path) !== -1;
+  return currentPattern.assets[assetType].indexOf(path) !== -1;
 }
 
 /**
@@ -119,26 +120,28 @@ function hasAsset(currentPattern, assetType, path) {
  */
 function registerAsset(path, currentPattern) {
   var fileExtension = Files.getExtension(path);
-  var overrideMessage = "Asset already registered, last declaration is taken into account";
+  var overrideMessage = "Asset already registered, last declaration is taken into account: ";
   switch(fileExtension) {
     case 'css':
     case 'scss':
-      hasAsset(currentPattern, 'css', fileExtension) ?
-        Logger.warning(overrideMessage + path):
+      hasAsset(currentPattern, 'css', path) ?
+        Logger.warning(overrideMessage + '`' + path + '`'):
         currentPattern.assets.css.push(path);
       break;
     case 'html':
-      hasAsset(currentPattern, 'html', fileExtension) ?
-        Logger.warning(overrideMessage + path):
+      hasAsset(currentPattern, 'html', path) ?
+        Logger.warning(overrideMessage + '`' + path + '`'):
         currentPattern.assets.html.push(path);
       break;
   }
+
+  return currentPattern;
 }
 
 module.exports = {
+  getList: getList,
   checkType: checkType,
   getOrCreate: getOrCreate,
   isAuthorizedAsset: isAuthorizedAsset,
-  registerAsset: registerAsset,
-  getList: getList
+  registerAsset: registerAsset
 };

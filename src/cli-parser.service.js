@@ -2,10 +2,11 @@
 
 var fs = require('fs');
 var _ = require('lodash');
-var commander = require ('commander');
+var commander;
 
 var ConfOptions = require('./configuration-options.service');
 var optionsValidator = require('./options-validator.service');
+var Command = require('./commander-wrapper.service');
 var Logger = require('./logger.service');
 
 /**
@@ -17,7 +18,7 @@ function run(args) {
   // We need to allow this method to accept arguments for unit testing
   var args = args || process.argv;
   var confOptions = ConfOptions.get();
-
+  commander = Command.getInstance();
   if (!cliSetup(args, confOptions)){
     return;
   }
@@ -25,7 +26,7 @@ function run(args) {
   commander.parse(args);
   var options = parseArgs(confOptions);
   try {
-    return optionsValidator.run(options, confOptions);
+    return optionsValidator.run(options);
   }
   catch(err) {
     Logger.error(err);
@@ -48,7 +49,7 @@ function cliSetup(args, confOptions) {
   // Output help if no options
   if (args.slice(2).length === 0) {
     commander.outputHelp();
-    return;
+    throw 'err';
   }
 
   return commander;

@@ -50,7 +50,7 @@ var options = {
   accessToken: "your_frontify_access_token",
   projectId: "your_frontify_project_id",
   patterns: "./patterns",
-  assets: "./assets/**/*.*",
+  assets: "./assets/**/*.*"
 }
 
 sync(options);
@@ -88,3 +88,16 @@ As well, you can set only a configuration file path:
 ```
 $ local-sync-frontify -c "./configuration.json"
 ```
+
+## Contributing
+------------------
+
+You can develop and test locally your modified package by running `npm link`. The package becomes then globally accessible.
+
+Commit messages must follow conventions, please use these guidelines: https://github.com/conventional-changelog/conventional-changelog-angular/blob/master/convention.md 
+
+Any new feature must be unit tested. The following `npm` tasks are available:
+  - `npm test` Will run all tests and print tests results along code coverage.
+  - `npm run test-ci` Will watch for any files changes and run all tests
+
+Code coverage report is generated in `/coverage/lcov-report` folder

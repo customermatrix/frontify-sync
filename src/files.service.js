@@ -14,7 +14,7 @@ function readFile(file) {
     return fs.readFileSync(file, 'utf8');
   }
   catch(err) {
-    Logger.error(err);
+    Logger.error(err.message);
     return;
   }
 }

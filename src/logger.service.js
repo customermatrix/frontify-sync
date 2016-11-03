@@ -1,11 +1,12 @@
 'use strict';
 
 var colors = require('cli-color');
+var consoleCaller = require('./console-caller.service');
 
 /**
  * Log usecases => error, warning, info and success
- * @param  {String} message [description]
- * @return {[type]}         [description]
+ * @param  {String}     message
+ * @return {Function}   log function called
  */
 function error(message) {
   return log('error', message);
@@ -44,8 +45,11 @@ function log(type, message) {
       type = '';
       color = "white";
   }
-  type += ':';
-  console.log(colors[color](type.toUpperCase()), message);
+  type += ': ';
+  var message = colors[color](type.toUpperCase()) + message;
+  consoleCaller.log(message);
+
+  return message;
 }
 
 module.exports = {
