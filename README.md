@@ -1,28 +1,30 @@
-local-sync-frontify
+frontify-sync
 ===================
 
 This package provides automatic synchronisation between local patterns and assets folders to a Frontify project.
+
+![schema](frontify-sync-schema.png)
 
 
 ## Installation
 ---------------
 
-Installing globally will give you access to the `local-sync-frontify` command anywhere on your system:  
+Installing globally will give you access to the `frontify-sync` command anywhere on your system:  
 
 ```
-npm install -g local-sync-frontify
+npm install -g frontify-sync
 ```
 
-You can also add `local-sync-frontify` to your `package.json` file:  
+You can also add `frontify-sync` to your `package.json` file:  
 
 ```
-npm install local-sync-frontify --save-dev
+npm install frontify-sync --save-dev
 ```
 
 ## Options
 ------------------
 
-`local-sync-frontify` comes with a few **options**.    
+`frontify-sync` comes with a few **options**.    
 It's possible to sync only `assets` or `patterns`, but at least one of these options must be set.  
 
 |Option  | Type | Command | Optional | Notes |
@@ -45,7 +47,7 @@ It's possible to sync only `assets` or `patterns`, but at least one of these opt
 Just require the package and pass options to the function:  
 
 ```
-var sync = require('local-sync-frontify');
+var sync = require('frontify-sync');
 var options = {
   accessToken: "your_frontify_access_token",
   projectId: "your_frontify_project_id",
@@ -68,7 +70,7 @@ Additionally, you can use a configuration file that can contains all possible op
 }
 ```
 ```
-var sync = require('local-sync-frontify');
+var sync = require('frontify-sync');
 var options = {
   configuration: "./configuration.json"
 }
@@ -80,13 +82,13 @@ sync(options);
 ------------------
 
 ```
-$ local-sync-frontify -A "your_frontify_access_token" -P "your_frontify_project_id" -p "./patterns" -a "./assets/**/*.*"
+$ frontify-sync -A "your_frontify_access_token" -P "your_frontify_project_id" -p "./patterns" -a "./assets/**/*.*"
 ```
 
 As well, you can set only a configuration file path:  
 
 ```
-$ local-sync-frontify -c "./configuration.json"
+$ frontify-sync -c "./configuration.json"
 ```
 
 ## Contributing

@@ -23,13 +23,13 @@ function run() {
         _execs: {},
         _allowUnknownOption: false,
         _args: [],
-        _name: 'local-sync-frontify'
+        _name: 'frontify-sync'
       }
       expect(commanderWrapper.getInstance()).to.containSubset(command);
     });
 
-    it ('should set CLI name to `local-sync-frontify`', function() {
-      expect(commanderWrapper.getInstance().name()).to.equal('local-sync-frontify');
+    it ('should set CLI name to `frontify-sync`', function() {
+      expect(commanderWrapper.getInstance().name()).to.equal('frontify-sync');
     });
 
   });

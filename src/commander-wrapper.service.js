@@ -1,5 +1,5 @@
 var Command = require('commander').Command;
-var commander = new Command('local-sync-frontify');
+var commander = new Command('frontify-sync');
 
 /**
  * Wrap commander initialization

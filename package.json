@@ -1,5 +1,5 @@
 {
-  "name": "local-sync-frontify",
+  "name": "frontify-sync",
   "private": true,
   "version": "0.1.0",
   "scripts": {
