@@ -99,7 +99,36 @@ You can develop and test locally your modified package by running `npm link`. Th
 Commit messages must follow conventions, please use these guidelines: https://github.com/conventional-changelog/conventional-changelog-angular/blob/master/convention.md 
 
 Any new feature must be unit tested. The following `npm` tasks are available:
+
   - `npm test` Will run all tests and print tests results along code coverage.
   - `npm run test-ci` Will watch for any files changes and run all tests
 
 Code coverage report is generated in `/coverage/lcov-report` folder
+
+## Release process
+------------------
+Release is made with `standard-version` of `conventional-changelog`:
+
+```
+npm run release
+```
+
+The following jobs will be ran:
+
+  - Bumping version in package.json file 
+  - Outputting changes to CHANGELOG.md (based on commit messages) 
+  - Committing package.json and CHANGELOG.md 
+  - Adding a new tag for targeted release 
+
+
+Once your local master branch is ready, just run the following command:
+```
+npm run publish
+```
+
+The following jobs will be ran:
+
+  - Pushing commit and tag to the remote master branch
+  - Publish the package to npm registry
+
+> Publishing on npm registry requires a registered user. Please read [Publishing npm packages](https://docs.npmjs.com/getting-started/publishing-npm-packages) for more details.
