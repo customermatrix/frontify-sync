@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.1.1"></a>
+## [0.1.1](https://github.com/customermatrix/frontify-sync/compare/v0.1.0...v0.1.1) (2016-12-16)
+
+
+### Bug Fixes
+
+* **patterns|INS-599:** Frontify-sync library returns an error when a pattern can't be extracted from file structure ([d91494c](https://github.com/customermatrix/frontify-sync/commit/d91494c))
+
+
+### Performance Improvements
+
+* **doc|INS-599:** Corrected read me file | improved package json file ([3b2dbc2](https://github.com/customermatrix/frontify-sync/commit/3b2dbc2))
+
+
+
 <a name="0.1.0"></a>
 # 0.1.0 (2016-11-11)
 
