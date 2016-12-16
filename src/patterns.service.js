@@ -119,6 +119,9 @@ function hasAsset(currentPattern, assetType, path) {
  * @param  {Object} currentPattern  Pattern Object
  */
 function registerAsset(path, currentPattern) {
+  if (!currentPattern) {
+    return;
+  }
   var fileExtension = Files.getExtension(path);
   var overrideMessage = "Asset already registered, last declaration is taken into account: ";
   switch(fileExtension) {
