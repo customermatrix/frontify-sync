@@ -1,6 +1,16 @@
 {
   "name": "frontify-sync",
   "version": "0.1.0",
+  "description": "Frontify-sync provides automatic synchronization between local patterns and assets folders to a Frontify project",
+  "keywords": ["frontify", "patterns", "assets", "synchronization"],
+  "url": "https://github.com/customermatrix/frontify-sync",
+  "bugs": "https://github.com/customermatrix/frontify-sync/issues",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/customermatrix/frontify-sync.git"
+  },
+  "license" : "MIT",
+  "preferGlobal": true,
   "scripts": {
     "test": "istanbul cover _mocha",
     "test-ci": "mocha --watch",

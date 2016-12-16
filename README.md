@@ -1,7 +1,7 @@
-frontify-sync
-===================
+# frontify-sync
+---------------
 
-This package provides automatic synchronisation between local patterns and assets folders to a Frontify project.
+This package provides automatic synchronization between local patterns and assets folders to a Frontify project.
 
 ![schema](frontify-sync-schema.png)
 
